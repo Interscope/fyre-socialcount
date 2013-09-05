@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Disclosure Campaign</title>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" ></script>
+<script type="text/javascript" src="/_global/js/require.js" ></script><!-- //cache.umusic.com/web_assets -->
+<script type="text/javascript" src="/_global/js/iga/iga.require.main.js" ></script>
+</head>
+<body>
+	
+	<div id="disclosure-cities">[Cities Go Here]</div>
+	
+	<script type="text/javascript">
+		require(["iga/apps/fyre-socialcount/requestQueue"/*, "iga/apps/fyre-socialcount/CampaignView"*/],function(queue, Campaign){
+			
+			new queue({ api: "content", //shim: true,
+						network: "umg.fyre.co", //umgdeftrends.fyre.co
+						queries:[{name:"ApplauseVid819", siteId:'336053', articleId: 'ladygaga_applausevid819'},
+						         {name:"LemmeFindOut", siteId:'336016', articleId: 'doeb_#lemmefindout'}
+							/*{name:"Rihanna", siteId:'337799', articleId: 'SocialStream_rihanna_Deftrends', type:"twitter"},
+			                    {siteId:'337799', articleId: 'SocialStream_2chainz_Deftrends', type:"twitter"},
+			                    {siteId:'337799', articleId: 'SocialStream_jayz_Deftrends', type:"twitter"},
+			                    {siteId:'337799', articleId: 'SocialStream_kanyewest_Deftrends', type:"twitter"}*/]}).get(function(){});
+		});
+	</script>
+</body>
+</html>

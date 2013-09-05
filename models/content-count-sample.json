@@ -1,0 +1,15 @@
+{
+    "status": "ok",
+    "code": 200,
+    "data": {
+        "123456": {
+            "some-article-id": {
+                "feed": 0,
+                "livefyre": 2,
+                "total": 2,
+                "facebook": 0,
+                "twitter": 0
+            }
+        }
+    }
+}
