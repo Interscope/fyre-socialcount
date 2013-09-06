@@ -56,32 +56,16 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 	    	});
 	    	
 	    	var $item = $(this.itemTemplate(data));
-	    	//Add some jQuery maybe	
 			self.$items[model.id] = $item;
 			//Append the $item
 	    	self.$container.append($item);
+	    	return $item;
 	    },
 		initialize: function(options){
 			var self = this;
 			this.options = options;
-			this.collection = this.collection || new SocialCountCollection([], options);
-			//Render any new models
-			this.collection.on("add", function(model){
-				self.renderModel(model);
-			});
 			
-			//Remove the $item from the view.
-			this.collection.on("remove", function(model){
-				self.$container.remove(self.views[model]);
-				delete self.$items[model.id];//delete the reference too.
-			});
-			
-			function _$change($c, value){
-				$c.addClass("changed");
-				setTimeout(function(){$c.removeClass("changed");}, options.changeAnimationTimeout || 3000);
-				$c.text(value);
-			}
-			
+			//#Process configuration options
 			//Create buckets for each type
 			if(self.options.buckets){
 				self.options.buckets = _.reduce(self.options.buckets, function(_buckets, bucket, attr){
@@ -96,6 +80,27 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 					}
 					return _buckets;
 				}, self.options.buckets);
+			}
+			
+			this.collection = this.collection || new SocialCountCollection([], options);
+			//Render any new models
+			this.collection.on("add", function(model){
+				var $item = self.renderModel(model);
+				_.each(self.options.buckets, function(bucket, attr){
+					
+				});
+			});
+			
+			//Remove the $item from the view.
+			this.collection.on("remove", function(model){
+				self.$container.remove(self.views[model]);
+				delete self.$items[model.id];//delete the reference too.
+			});
+			
+			function _$change($c, value){
+				$c.addClass("changed");
+				setTimeout(function(){$c.removeClass("changed");}, options.changeAnimationTimeout || 3000);
+				$c.text(value);
 			}
 			
 			this.collection.on("change:count change:percent change:heat", function(model, value, options){

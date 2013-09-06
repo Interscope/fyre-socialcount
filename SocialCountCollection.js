@@ -26,10 +26,12 @@ define(["jquery", "underscore", "IGA.utils", "backbone", "iga/utils/iga.backbone
 				//When a model is added to this collection:
 				//@TODO add rank, percentile (count-rank-1)/count
 				//  Add the new model's counts to the Collection's counts
-				_.each(counters.attributes, function(value, type){
-					var _mv = model.get("count."+type);
-					if(_mv){ counters.set(type, value + _mv); }
-				});
+				setTimeout(function(){
+					_.each(counters.attributes, function(value, type){
+						var _mv = model.get("count."+type);
+						if(_mv){ counters.set(type, value + _mv); }
+					});
+				},0);
 			}, this);
 			
 			//When a model is removed 
