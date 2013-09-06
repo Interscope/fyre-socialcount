@@ -1,35 +1,32 @@
 /**
  * @author Malcolm Poindexter <malcolm.poindexter@umusic.com>
  */
-define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
-        "iga/apps/fyre-socialcount/models/CurationCount", "iga/apps/fyre-socialcount/models/ContentCount",
+define(["jquery", "underscore", "IGA.utils", "backbone", "iga/utils/iga.backbone.custom",
+        "iga/apps/fyre-socialcount/models/BaseCount", "iga/apps/fyre-socialcount/models/CurationCount", "iga/apps/fyre-socialcount/models/ContentCount",
         "iga/apps/fyre-socialcount/requestQueue"],
-		function($, _, Backbone, IGABackbone, CurationCount, ContentCount, request){
+		function($, _, utils, Backbone, IGABackbone, BaseCount, CurationCount, ContentCount, request){
 	
 	var SocialCountCollection = Backbone.Collection.extend({
-		//model: ContentCount,
+		model: BaseCount,
 		counters: new Backbone.Model({total: 0, twitter: 0, facebook: 0, feed: 0, livefyre: 0}),
 		initialize: function(models, options){
 			this.config = options;
-			switch(options.api){//@todo Add Heat Index support
-				case "curate":
-					this.model = CurationCount;
-					break;
-				default:
-					this.model = ContentCount;
-			}
 			//When the total changes, update the individual models' % of total
 			var counters = this.counters;
-			counters.on("change:total", function(model, options){
-				_.each(this.models, function(model){
-					model.set("count.percentOfTotal", model.get("count.total") / counters.get("total") * 100);
-				}, this);
+			counters.on("change", function(model, options){
+				for(var attr in model.changed){
+					_.each(this.models, function(model){
+						_mv = model.get("count."+attr);
+						if(_mv){ model.set("percent."+attr, _mv / counters.get(attr) * 100); }
+					}, this);
+				}
 			}, this);
 			
 			this.on("add", function(model){
 				//When a model is added to this collection:
+				//@TODO add rank, percentile (count-rank-1)/count
 				//  Add the new model's counts to the Collection's counts
-				_.each(counters, function(value, type){
+				_.each(counters.attributes, function(value, type){
 					var _mv = model.get("count."+type);
 					if(_mv){ counters.set(type, value + _mv); }
 				});
@@ -38,16 +35,16 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 			//When a model is removed 
 			this.on("remove", function(model){
 				//  update the collection counts
-				_.each(counters, function(value, type){
+				_.each(counters.attributes, function(value, type){
 					var _mv = model.get("count."+type);
 					if(_mv){ counters.set(type, value - _mv); }
 				});
 			}, this);
 				
 			//  When a model count  changes
-			model.on("change:count", function(model, options){
-				var changes = model.changedAttributes(); 
-				for(var attr in changes){
+			this.on("change:count", function(model, options){ 
+				//@TODO percent.OfMaxTotal
+				for(var attr in model.changed){
 					if(counters[attr]){ //  and we have a collection counter for this attribute
 						//  update the collection with the change in the attribute value.
 						counters.set(attr, counters.get(attr) + (model.previousAttributes()[attr] - model[attr]));
@@ -68,18 +65,28 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 					return -model.get("total");
 			}
 		},
-		requestCallback: function(counts){;
+		requestCallback: function(request, counts){;
 			//If the item is new add it with id=siteId_articleId .
 			//	If the item already exists, merge it, and trigger a "change".
+			var model, self = this;
+			switch(request.api){//@todo Add Heat Index support
+				case "curate":
+					model = CurationCount;
+					break;
+				default:
+					model = ContentCount;
+			}
 			_.each(counts, function(c){
-				c.id = c.siteId+"_"+c.articleId;
-				this.add(new this.model(c), {merge:true});//NOTE: counts from different apis will merge to the same model based on id.
+				self.add(new model(c), {merge:true});//NOTE: counts from different apis will merge to the same model based on id.
 			});
 		},
 		update: function(){
+			var self = this;
 			this.trigger("update");
-			//@TODO allow multiple request instances for content + curate (timeline) or heat
-			new request(this.config).get(this.requestCallback);
+			//Allow multiple request instances for content, curate (timeline), or heat
+			_.each(this.config.requests, function(r){
+				new request(r).get(_.bind(self.requestCallback, self, r));
+			});
 			this.trigger("updated");
 		},
 		/**

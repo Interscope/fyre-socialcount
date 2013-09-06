@@ -8,6 +8,10 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 	function requestQueue(options){
 		options.api = options.api.toLowerCase();
 		this.options = options;
+		this._queries = _.reduce(options.queries, function(_queries, q){
+			_queries[q.siteId+"_"+q.articleId] = q;
+			return _queries;
+		}, {});
 	}
 	
 	requestQueue.prototype.get = function(callback){
@@ -50,7 +54,6 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 			
 			//Hash the query
 			var query64 = base64(query);
-			console.log(query+" => "+query64);
 			//Send an api request with the hashed query
 			if(options.shim){
 				model.sampleResponse(_.bind(self.handleResponse, self, callback));
@@ -59,17 +62,15 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 			}
 		});
 	};
-	
-	 requestQueue.prototype.handleResponse = function(callback, response){
-		console.log(response);
+	requestQueue.prototype.handleResponse = function(callback, response){
 		var options = this.options, self = this;
 		if(response.code == 200){
-			var data = response.data;
+			var data = response.data, _data = [], _query ={};
 			_.each(data, function(site, siteId){//each site {articles...}
 				siteId = siteId.replace(/^site_/,"");
 				_.each(site, function(article, articleId){//each article {types...}
 					articleId = articleId.replace(/^article_/,"");
-					var _data = {siteId: siteId, articleId: articleId, count:{}}, _total=0;//create our data type
+					var _query = {id: siteId+"_"+articleId ,siteId: siteId, articleId: articleId, count:{}}, _total=0;//create our data type
 					
 					_.each(article, function(value, typeId){//each rule-type [?...]
 						//get the counts for each type.
@@ -80,21 +81,30 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 								_timeline.push({time:value[1], count:value[0]});// add the counts to the timeline
 								return _sum + value[0];
 							}, _sum);
-							_data.count[type] = _sum;
-							_data.timeline[type] = _timeline;
+							_query.count[type] = _sum;
+							_query.timeline = _query.timeline || {};
+							_query.timeline[type] = _query.timeline[type] || {};
+							// add duration {from}_{until} level for multiple timeline support
+							var _q = self._queries[_query.id], 
+								_qd = ((_q.from || '')+"_"+(_q.until || '' )).replace('-','');
+							_query.timeline[type][_qd] = _timeline;
 						}else{
-							_data.count[typeId] = value;
+							_query.count[typeId] = value;
 						}
 						if(typeId !== "total"){_total+= value;}
 					});	
-					if(!_data.count.total){_data.count.total = _total;} //CurationCount doesn't return a total
-					//@todo merge data with options.queries[?]
-					console.log(_data);
-					callback(_data); // fire callback to pass query data to collection
+					if(!_query.count.total){_query.count.total = _total;} //CurationCount doesn't return a total
+					//merge data with options.queries
+					_data.push(self.mergeData(_query));
 				});	
 			});
 			//Return batch of data to callback([])
+			callback(_data);
 		}
+	};
+	
+	requestQueue.prototype.mergeData = function(data){
+		 return _.extend(this._queries[data.id], data);
 	};
 	
 	return requestQueue;

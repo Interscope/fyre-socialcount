@@ -16,13 +16,33 @@
 			
 			new queue({ api: "content", //shim: true,
 						network: "umg.fyre.co", //umgdeftrends.fyre.co
-						queries:[{name:"ApplauseVid819", siteId:'336053', articleId: 'ladygaga_applausevid819'},
-						         {name:"LemmeFindOut", siteId:'336016', articleId: 'doeb_#lemmefindout'}
-							/*{name:"Rihanna", siteId:'337799', articleId: 'SocialStream_rihanna_Deftrends', type:"twitter"},
-			                    {siteId:'337799', articleId: 'SocialStream_2chainz_Deftrends', type:"twitter"},
-			                    {siteId:'337799', articleId: 'SocialStream_jayz_Deftrends', type:"twitter"},
-			                    {siteId:'337799', articleId: 'SocialStream_kanyewest_Deftrends', type:"twitter"}*/]}).get(function(){});
+						queries:[{siteId:'336053', articleId: 'ladygaga_applausevid819', data:{ name: "Applause Video 8/19", hashtag: "#applausevid819" } },
+						         {siteId:'336016', articleId: 'doeb_#lemmefindout', data:{ name:"DoeB - Lemme Find Out", hashtag: "#lemmefindout"} }]
+		  	}).get(function(d){ console.log(d); });
 		});
+		
+		require(["iga/apps/fyre-socialcount/SocialCountCampaignView"],function(Campaign){
+			
+			var campaign = new Campaign({
+				el: document.getElementById("disclosure-cities"),
+				buckets:{
+					"percent.total": true
+				},
+				requests: {
+					counts:{
+						api: "content", //shim: true,
+						network: "umg.fyre.co", //umgdeftrends.fyre.co
+						queries:[{siteId:'336053', articleId: 'ladygaga_applausevid819', data:{ name: "Purdue", hashtag: "disclosurepurdue" } },
+					    	{siteId:'336016', articleId: 'doeb_#lemmefindout', data:{ name:"UCLA", hashtag: "disclosureucla"} }]
+					}
+				}
+			}).render().start();
+		});
+		
+		/*{name:"Rihanna", siteId:'337799', articleId: 'SocialStream_rihanna_Deftrends', type:"twitter"},
+        {siteId:'337799', articleId: 'SocialStream_2chainz_Deftrends', type:"twitter"},
+        {siteId:'337799', articleId: 'SocialStream_jayz_Deftrends', type:"twitter"},
+        {siteId:'337799', articleId: 'SocialStream_kanyewest_Deftrends', type:"twitter"}*/
 	</script>
 </body>
 </html>

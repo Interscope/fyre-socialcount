@@ -1,0 +1,29 @@
+@CHARSET "ISO-8859-1";
+div#contest-container{background:#000; background:rgba(0,0,0,.5);}
+h1#headline{background:#fff; color:#000; padding:5px 20px;font-family:"tandelle", sans-serif; font-weight:300; font-size:48px; line-height:1em; margin-bottom:10px;}
+div.iga-socialcount-container > article.university{width:20%; float:left; padding:180px 0px 20px 0; background:#fff; margin:10px; background-size:cover; background-position:center center; background-repeat:no-repeat; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; height:300px; }
+div.iga-socialcount-container > article.disqualified{opacity:.2; width:200px;}
+div.iga-socialcount-container > article.university div.info{background:#000; background:rgba(0,0,0,.8); padding:20px 0 20px 12px; width:100%; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; }
+div.iga-socialcount-container > article.university h3{color:#fff; font-weight:700; font-size:36px; letter-spacing:.05em; -webkit-font-smoothing:antialiased; font-weight:300; text-transform:uppercase; line-height:1em; font-family:"tandelle", sans-serif;}
+div.iga-socialcount-container > article.disqualified h3, div.iga-socialcount-container > article.disqualified p{text-decoration:line-through;}
+div.iga-socialcount-container > article.disqualified p.percentOfTotal{display:none;}
+div.iga-socialcount-container > article.university p{font-size:13px; color:#0cf; -webkit-font-smoothing:antialiased;}
+div.iga-socialcount-container > article.university p.percentOfTotal{padding:2px 10px 2px 5px; background:#0cf; color:#000; font-size:24px; float:right; width:auto; font-weight:300; position:relative; top:-35px; line-height:1em; font-family:"tandelle", sans-serif;}
+
+div.iga-socialcount-container > article.university:nth-last-child(-n+6) h3{font-size:24px;}
+div.iga-socialcount-container > article.university:nth-last-child(-n+6) p.percentOfTotal{font-size:16px;}
+
+/*Set images*/
+div.iga-socialcount-container > article.purdue{background-image:url(http://www.ohlays.com/wallpapers/purdueboilermaker.jpg); }
+div.iga-socialcount-container > article.ucla{background-image:url(http://www.ohlays.com/wallpapers/uclabruins.jpg); }
+div.iga-socialcount-container > article.usc{background-image:url(http://www.ohlays.com/wallpapers/usctrojans.jpg); }
+div.iga-socialcount-container > article.harvard{background-image:url(http://www.ohlays.com/wallpapers/harvardcrimson.jpg); }
+div.iga-socialcount-container > article.oregon{background-image:url(http://www.ohlays.com/wallpapers/oregonducks.jpg); }
+div.iga-socialcount-container > article.cal{background-image:url(http://www.ohlays.com/wallpapers/californiagoldenbears.jpg); }
+div.iga-socialcount-container > article.michigan{background-image:url(http://www.ohlays.com/wallpapers/michiganwolverines.jpg); }
+div.iga-socialcount-container > article.duke{background-image:url(http://www.ohlays.com/wallpapers/dukebluedevils.jpg); }
+div.iga-socialcount-container > article.ohiostate{background-image:url(http://www.ohlays.com/wallpapers/ohiostatebuckeyes.jpg); }
+div.iga-socialcount-container > article.florida{background-image:url(http://www.ohlays.com/wallpapers/floridagators.jpg); }
+div.iga-socialcount-container > article.arizona{background-image:url(http://www.ohlays.com/wallpapers/arizonawildcats1.jpg); }
+div.iga-socialcount-container > article.arizonastate{background-image:url(http://www.ohlays.com/wallpapers/arizonastatesundevils.jpg); }
+
