@@ -1,2 +1,6 @@
 deploy.sh
 *.opt.min.js,*.opt.min.js.gz,css/*.min.css
+*.opt.js
+*.opt.min.js
+*.opt.min.js.gz
+css/*.min.css
