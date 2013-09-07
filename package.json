@@ -1,0 +1,20 @@
+{
+  "name": "fyre-socialcount",
+  "version": "0.9.0",
+  "description": "A plugin to make Backbone.js keep track of nested attributes.",
+  "dependencies": {
+  	"jquery": "1.4.4",
+    "backbone": "0.9.9",
+    "backbone-nested": "1.1.2",
+  },
+  "devDependencies": {},
+  "homepage": "http://afeld.github.com/backbone-nested/",
+  "main": "SocialCountCampaignView.js",
+  "repositories": [
+    {
+      "type": "git", 
+      "url": "https://github.com/Interscope/fyre-socialcount.git"
+    }
+  ],
+  "github": "https://github.com/Interscope/fyre-socialcount"
+}

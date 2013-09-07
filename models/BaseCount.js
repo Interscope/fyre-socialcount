@@ -9,6 +9,7 @@ define(["jquery", "underscore", "IGA.utils", "backbone", "backbone.nestedmodel"]
 	var BaseCount = Backbone.NestedModel.extend({
 		defaults:{},
 		initialize: function(attributes, options){
+			var self = this;
 			this.config = options;
 			if(attributes.data){
 				if(attributes.data.name){
@@ -26,10 +27,40 @@ define(["jquery", "underscore", "IGA.utils", "backbone", "backbone.nestedmodel"]
 					}, this);
 				}
 				
+				attributes.url = window.location;
 			}
 			
+			//Helper Lambda Expression Functions
+			attributes.urlEncode = function(){
+				return function(text){ return encodeURIComponent(_.template(text, self.attributes)); };
+			};
+			attributes.htmlEncode = function(){
+				return function(text){ return $('<div/>').text(_.template(text, self.attributes)).html(); };
+			};
+			attributes.round = function(){
+				return function(text){
+					var p = text.split(',');
+					if(p.length >= 2){
+						p[0] = _.template(p[0], self.attributes);
+						return utils.round(p[0],parseInt(p[1]));
+						//return p[0].toFixed(parseInt(p[1]));//imprecise rounding
+					}
+					return "";  
+				};
+			};
+			attributes.formatDate = function(){
+				return function(text){
+					var p = text.split(',');
+					if(p.length >= 2){
+						p[0] = _.template(p[0], self.attributes);
+						return utils.dateFormat(p[0], p[1]);
+					}
+					return "";  
+				};
+			};
 			//Add some view-layer attributes
 			attributes.cssSafeId = attributes.id.replace("_","-").replace(/[#\.]/g, '');
+			//Update the module attributes, but don't trigger a change
 			this.set(attributes, {silent:true});
 		}
 	});

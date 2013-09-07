@@ -1,8 +1,8 @@
-<article id="{{cssSafeId}}" class="university {{data.name}} {{#data.disabled}}disqualified{{/data.disabled}} width-percentOfTotal bucket-percentOfTotal">
-	<div class="info">
-		<h3>{{data.Name}}</h3>
-		<p class="hashtag"><a href="https://twitter.com/intent/tweet?hashtags={{data.hashtag}}&related=disclosure,interscope" target="_blank" >#{{data.hashtag}}</a></p>
-		<p class="percentOfTotal">{{percent.total}}</p>
-		<p class="total">{{count.total}}</p>
+<article id="{{cssSafeId}}" class="{{data.name}}{{#data.disabled}} disabled{{/data.disabled}}">
+	<div class="bar">
+		<p class="width-percentOfTotal">
+			<span class="hashtag"><a href="https://twitter.com/intent/tweet?text={{#urlEncode}}{{data.twitterIntentText}}{{/urlEncode}}&hashtags={{data.hashtag}}&related=interscope&url={{#urlEncode}}{{url.href}}{{/urlEncode}}" target="_blank" >#{{data.hashtag}}</a></span>
+			<span class="percentOfTotal">{{percent.otal}}</span>
+		</p>
 	</div>
 </article>

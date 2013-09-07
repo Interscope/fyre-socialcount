@@ -5,8 +5,8 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
         "iga/apps/fyre-socialcount/SocialCountCollection", 
         "hgn!iga/apps/fyre-socialcount/templates/SocialCountCampaign.tpl",
         "hgn!iga/apps/fyre-socialcount/templates/SocialCountCampaignItem.tpl",
-        "css!iga/apps/fyre-socialcount/css/disclosure-inyourcity.css",
-        /*"hgn!iga/apps/fyre-socialcount/templates/partials.tpl.html"*/],
+        /*"hgn!iga/apps/fyre-socialcount/templates/partials.tpl.html"*/
+        "css!iga/apps/fyre-socialcount/css/fyre-socialcount.css",],
 		function($, _, utils, Hogan, Backbone, SocialCountCollection, CampaignTemplate, ItemTemplate, PartialTemplates){
 	
 	$.fn.childrenAndSelf = $.fn.childrenAndSelf || function(selector){
@@ -16,28 +16,22 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 	var SocialCountCollectionView = Backbone.View.extend({
 		className: "iga-socialcount",
 		$items: {},
-		template: (function () {
-			var self = this;
-	        return function (data) {
-	            var _template = self._template || CampaignTemplate;
-	            if(typeof _template == "string"){
-	            	_template = Hogan.compile(_template);
-	        	}
-	            //return _template.render(data, PartialTemplates);
-	            return _template(data, PartialTemplates);
-	        };
-	    }()),
-	    itemTemplate: (function () {
-	    	var self = this;
-	        return function (data) {
-	            var _template = self._itemTemplate || ItemTemplate;
-	            if(typeof _template == "string"){
-	            	_template = Hogan.compile(_template);
-	        	}
-	            //return _template.render(data, PartialTemplates);
-	            return _template(data, PartialTemplates);
-	        };
-	    }()),
+		template: function (data) {
+            var _template = this._template || CampaignTemplate;
+            if(typeof _template == "string"){
+            	_template = Hogan.compile(_template);
+        	}
+            //return _template.render(data, PartialTemplates);
+            return _template(data, PartialTemplates);
+	    },
+	    itemTemplate: function (data) {
+            var _template = this._itemTemplate || ItemTemplate;
+            if(typeof _template == "string"){
+            	_template = Hogan.compile(_template);
+        	}
+            //return _template.render(data, PartialTemplates);
+            return _template(data, PartialTemplates);
+        },
 	    render: function() {
 	    	var self = this;
 	    	var $rendered = this.template(this.collection.serialize());
@@ -86,9 +80,7 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 			//Render any new models
 			this.collection.on("add", function(model){
 				var $item = self.renderModel(model);
-				_.each(self.options.buckets, function(bucket, attr){
-					
-				});
+				$item.data("model", model);
 			});
 			
 			//Remove the $item from the view.
@@ -97,10 +89,22 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 				delete self.$items[model.id];//delete the reference too.
 			});
 			
-			function _$change($c, value){
+			//.changed class whenever an attribute changes.
+			function _$change($c){
 				$c.addClass("changed");
-				setTimeout(function(){$c.removeClass("changed");}, options.changeAnimationTimeout || 3000);
-				$c.text(value);
+				setTimeout(function(){$c.removeClass("changed");}, options.changeAnimationTimeout || 2000);
+			}
+			
+			function _$setAttr($attr, value, attrPath){
+				if(attrPath.indexOf("percent")===0){
+					value = utils.round(value, self.options.decimalPlaces || 2)+"%";//trigger changed even when change is < rounding
+				}
+				if($attr.is("meta")){
+					$attr.attr("content", value);
+				}else{
+					$attr.text(value);
+					_$change($attr);
+				}
 			}
 			
 			this.collection.on("change:count change:percent change:heat", function(model, value, options){
@@ -114,7 +118,6 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 						attrPath =_attr+"."+attr;
 						value = model.get(attrPath);
 						if(_attr === "percent"){
-							value = utils.round(value, self.options.decimalPlaces || 2);
 							attrClass = "percent" + (attr.match(/^Of|Or/)?attr:("Of"+utils.toProperCase(attr)) );
 							//update percent widths & heights
 							$item.childrenAndSelf(".width-"+attrClass).css({width:value+"%"});
@@ -131,29 +134,30 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 							//remove any old bucket classes
 							$item.childrenAndSelf(".bucket-"+attrClass).removeClass(_.reduce(_buckets, function(memo, b){
 								if(memo !==""){memo+=" ";}
-								return memo+"bucket-"+attrClass+"-"+b.css;
+								return memo+attrClass+"-"+b.css;
 							},""));
 							//Add new bucket class
 							for(var i in _buckets){
 								bucket = _buckets[i];
 								if(bucket.start <= value && bucket.stop >= value){
-									$item.childrenAndSelf(".bucket-"+attrClass).addClass("bucket-"+attrClass+"-"+bucket.css);
+									$item.childrenAndSelf(".bucket-"+attrClass).addClass(attrClass+"-"+bucket.css);
 									break;
 								}
 							};
 						}
-						
-						$attr = $item.childrenAndSelf("."+attrClass).text(value);
-						_$change($attr, value);
+						$attr = $item.childrenAndSelf("."+attrClass);
+						_$setAttr($attr, value, attrPath);
+						_$change($item);
 					}
 				}
 			}, this);
 			
-			this.collection.counters.on("change", function(model, value, options){
-				var changes = model.changedAttributes();
-				for(var attr in changes){
-					value = model.get(attr);
-					self.$el.find(".iga-socialcount-"+attr).text(value);
+			this.collection.counters.on("change", function(counter, value, options){
+				var $attr;
+				for(var attr in counter.changed){
+					value = counter.get(attr);
+					$attr = self.$el.find(".iga-socialcount-"+attr);
+					_$setAttr($attr, value, attr);
 				}
 			});
 			

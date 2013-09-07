@@ -1,0 +1,1 @@
+define([],function(){ return '<div> 	<div class="iga-socialcount-container"></div> 	<meta class="iga-socialcount-total" itemprop="counters.total" content="{{counters.total}}" /> </div>';});

@@ -1,10 +1,10 @@
 /**
  * @author Malcolm Poindexter <malcolm.poindexter@umusic.com>
  */
-define(["jquery", "underscore", "IGA.utils", "backbone", "iga/utils/iga.backbone.custom",
+define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
         "iga/apps/fyre-socialcount/models/BaseCount", "iga/apps/fyre-socialcount/models/CurationCount", "iga/apps/fyre-socialcount/models/ContentCount",
         "iga/apps/fyre-socialcount/requestQueue"],
-		function($, _, utils, Backbone, IGABackbone, BaseCount, CurationCount, ContentCount, request){
+		function($, _, Backbone, IGABackbone, BaseCount, CurationCount, ContentCount, request){
 	
 	var SocialCountCollection = Backbone.Collection.extend({
 		model: BaseCount,
@@ -14,10 +14,13 @@ define(["jquery", "underscore", "IGA.utils", "backbone", "iga/utils/iga.backbone
 			//When the total changes, update the individual models' % of total
 			var counters = this.counters;
 			counters.on("change", function(model, options){
+				var _count;
 				for(var attr in model.changed){
+					_count = counters.get(attr);
 					_.each(this.models, function(model){
 						_mv = model.get("count."+attr);
-						if(_mv){ model.set("percent."+attr, _mv / counters.get(attr) * 100); }
+						if( _count === 0 ){ model.set("percent."+attr, 1 / self.models.length * 100); }//if we don't have any counts, set each percent to 1/# of models
+						else if(_mv){ model.set("percent."+attr, _mv / _count * 100); }
 					}, this);
 				}
 			}, this);
@@ -64,7 +67,7 @@ define(["jquery", "underscore", "IGA.utils", "backbone", "iga/utils/iga.backbone
 			//@TODO Support different sort attributes, sort order
 			switch(this.sortBy){
 				default:
-					return -model.get("total");
+					return -model.get("count.total");
 			}
 		},
 		requestCallback: function(request, counts){;
@@ -100,6 +103,7 @@ define(["jquery", "underscore", "IGA.utils", "backbone", "iga/utils/iga.backbone
 			this.update();
 			this.updateTimeout = setTimeout(_.bind(this.updateEvery, this, interval), interval);
 		},
+		//@TODO Dynamic back-off polling [5000, 30000]
 		start: function(){ this.update(); },
 		stop: function(){
 			clearTimeout(this.updateTimeout);

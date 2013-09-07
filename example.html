@@ -9,20 +9,40 @@
 </head>
 <body>
 	
-	<div id="disclosure-cities">[Cities Go Here]</div>
+	<div id="disclosure-cities"></div>
+	
+	<div id="disclosure-bar"></div>
 	
 	<script type="text/javascript">
-		require(["iga/apps/fyre-socialcount/requestQueue"/*, "iga/apps/fyre-socialcount/CampaignView"*/],function(queue, Campaign){
-			
-			new queue({ api: "content", //shim: true,
+		/*require(["iga/apps/fyre-socialcount/requestQueue"/ *],function(request){
+			new request({ api: "content", //shim: true,
 						network: "umg.fyre.co", //umgdeftrends.fyre.co
 						queries:[{siteId:'336053', articleId: 'ladygaga_applausevid819', data:{ name: "Applause Video 8/19", hashtag: "#applausevid819" } },
 						         {siteId:'336016', articleId: 'doeb_#lemmefindout', data:{ name:"DoeB - Lemme Find Out", hashtag: "#lemmefindout"} }]
 		  	}).get(function(d){ console.log(d); });
-		});
+		});*/
 		
-		require(["iga/apps/fyre-socialcount/SocialCountCampaignView"],function(Campaign){
-			
+		/*require(["iga/apps/fyre-socialcount/SocialCountCampaignView"],function(Campaign){
+			var campaign = new Campaign({
+				el: document.getElementById("disclosure-bar"),
+				buckets:{
+					"percent.total": true
+				},
+				requests: {
+					counts:{
+						api: "content", //shim: true,
+						network: "umg.fyre.co", //umgdeftrends.fyre.co
+						queries:[{siteId:'336053', articleId: 'ladygaga_applausevid819', data:{ name: "Purdue-b", hashtag: "disclosurepurdue", date:"10/6/2013" } },
+					    	{siteId:'336016', articleId: 'doeb_#lemmefindout', data:{ name:"UCLA-b", hashtag: "disclosureucla", date:"10/7/2013"}},
+					    	{siteId:'336035', articleId: 'colettecarr_twitter', data:{ name:"CAL-b", hashtag: "disclosurecal", date:"10/9/2013"}},
+					    	{siteId:'336074', articleId: 'slaughterhouse_twitter', data:{ name:"USC-b", hashtag: "disclosureusc", date:"10/8/2013"}}
+					    	]
+					}
+				}
+			}).render().start();
+		});*/
+		
+		require(["iga/apps/fyre-socialcount/Disclosure-InYourCity"],function(Campaign){
 			var campaign = new Campaign({
 				el: document.getElementById("disclosure-cities"),
 				buckets:{
@@ -32,8 +52,19 @@
 					counts:{
 						api: "content", //shim: true,
 						network: "umg.fyre.co", //umgdeftrends.fyre.co
-						queries:[{siteId:'336053', articleId: 'ladygaga_applausevid819', data:{ name: "Purdue", hashtag: "disclosurepurdue" } },
-					    	{siteId:'336016', articleId: 'doeb_#lemmefindout', data:{ name:"UCLA", hashtag: "disclosureucla"} }]
+						queries:[{siteId:'336053', articleId: 'ladygaga_applausevid819', data:{ name: "Purdue", hashtag: "DisclosurePurdue", date:"10/6/2013" } },
+					    	{siteId:'336016', articleId: 'doeb_#lemmefindout', data:{ name:"UCLA", hashtag: "DisclosureUCLA", date:"10/7/2013"} },
+					    	{siteId:'336035', articleId: 'colettecarr_twitter', data:{ name:"CAL", hashtag: "DisclosureCal", date:"10/9/2013"} },
+					    	{siteId:'336074', articleId: 'slaughterhouse_twitter', data:{ name:"USC", hashtag: "DisclosureUSC", date:"10/8/2013"} },
+					    	{siteId:'336066', articleId: 'omggirlz_twitter', data:{ name:"Ohio State", hashtag: "DisclosureOhioState", date:"10/10/2013"} },
+					    	{siteId:'336024', articleId: 'keyshiacole_twitter', data:{ name:"Harvard", hashtag: "DisclosureHarvard", date:"10/11/2013"} },
+					    	{siteId:'335820', articleId: 'gloriatrevi _Twitter', data:{ name:"Arizona State", hashtag: "DisclosureASU", date:"10/12/2013"}},
+					    	{siteId:'335790', articleId: 'angelhazemusic_Twitter', data:{ name:"Duke", hashtag: "DisclosureDuke", date:"10/13/2013"} },
+					    	{siteId:'336080', articleId: 'zedd_twitter', data:{ name:"Oregon", hashtag: "DisclosureOregon", date:"10/14/2013"} },
+					    	{siteId:'335817', articleId: 'frankiej _Twitter', disabled:true, data:{ name:"Michigan", hashtag: "DisclosureMichigan", date:"10/15/2013"} },
+					    	{siteId:'335823', articleId: 'horaciopalencia _Twitter', disabled:true, data:{ name:"Florida", hashtag: "DisclosureFlorida", date:"10/16/2013"} },
+					    	{siteId:'340761', articleId: 'trinidadjamesgg_twitter', disabled:true, data:{ name:"Arizona", hashtag: "DisclosureArizona", date:"10/17/2013"} }
+				    	]
 					}
 				}
 			}).render().start();

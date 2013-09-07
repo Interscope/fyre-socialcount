@@ -16,7 +16,7 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 	
 	requestQueue.prototype.get = function(callback){
 		var options = this.options, self = this;
-		var requestParams = {}, model, batchSize = 1 || options.batchSize;
+		var requestParams = {}, model, batchSize = 1 || options.batchSize, batchRequestLimit = 10, batchRequestTimeout = 1;
 		//@TODO Support Heat Index
 		switch(options.api){
 			case "curate":
@@ -27,6 +27,7 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 				break;
 			case "content":
 				model = ContentCount;
+				batchRequestLimit = 10;
 				break;
 		}
 		
@@ -38,11 +39,16 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 					_b = [];
 					_m.push(_b);
 				}
-				_b.push(value);
+				if(!value.disabled){
+					_b.push(value);
+				}
 				return _m;
 			}, []);
 		
+		var _disabled = _.where(options.queries, {disabled:true});
+		
 		//Process the batches
+		var query64, _b;
 		_.each(_batches, function(batch, i){
 			//Format the queries
 			var query = _.reduce(batch, function(memo, count){
@@ -53,14 +59,28 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 			},"");
 			
 			//Hash the query
-			var query64 = base64(query);
+			query64 = base64(query);
 			//Send an api request with the hashed query
+			function _request(model, query64){
+				$.getJSON(_.template(model.API, { network: options.network || "umg.fyre.co" , query: query64} ), requestParams, _.bind(self.handleResponse, self, callback));
+			}
 			if(options.shim){
 				model.sampleResponse(_.bind(self.handleResponse, self, callback));
 			}else{
-				$.getJSON(_.template(model.API, { network: options.network || "umg.fyre.co" , query: query64} ), requestParams, _.bind(self.handleResponse, self, callback));
+				_b = Math.floor((i+1) / batchRequestLimit);
+				if(batchRequestLimit && _b > 0 ){//ContentCount API only allows 10 requests per sec
+					setTimeout(_.partial(_request, model, query64), batchRequestTimeout*_b);
+				}else{
+					_request(model, query64);
+				}
 			}
 		});
+		
+		//Setup and pass the disabled items straight through.
+		_.each(_disabled, function(dis){
+			dis.id = dis.siteId+"_"+dis.articleId;
+		});
+		callback(_disabled);
 	};
 	requestQueue.prototype.handleResponse = function(callback, response){
 		var options = this.options, self = this;
@@ -81,7 +101,7 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 								_timeline.push({time:value[1], count:value[0]});// add the counts to the timeline
 								return _sum + value[0];
 							}, _sum);
-							_query.count[type] = _sum;
+							_timeline._count = _sum; //this is just the count over the timeline-range
 							_query.timeline = _query.timeline || {};
 							_query.timeline[type] = _query.timeline[type] || {};
 							// add duration {from}_{until} level for multiple timeline support
