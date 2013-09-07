@@ -1,5 +1,10 @@
-#
+#!/bin/bash
+#require node, uglifyjs, csso, rjs, gzip
 _PATH=$(echo $PWD | sed -e 's/.*js\/\(.*\)/\1/' | xargs echo)
+if [ -z "$1" ]; then
+	echo -e "\e[1;31mA file to build is required.\e[0m"
+	exit;
+fi
 _BUILD_FILE=$1
 #Minify & Run Replacements on css
 cd css
@@ -36,12 +41,12 @@ echo -e "\e[1;37mOptimizing $_BUILD_FILE.js ... \e[0m"
 cp $_BUILD_FILE.js $_BUILD_FILE.tmp.js
 echo -e "\e[1;37m\tSwitching to minified css \e[0m"
 sed -i -r s:"(['\"]css!.*)\.css(['\"])":"\1.min.css\2":g $_BUILD_FILE.tmp.js
-echo -e "\e[1;37m\tRunning requirejs optimizer \e[0m"
+echo -e "\e[1;37m\tRunning requirejs optimizer > $_BUILD_FILE.opt.js  \e[0m"
 rjs -o app.build.js name=$_PATH/$_BUILD_FILE.tmp out=$_BUILD_FILE.opt.js
 sed -i -r s:"$_BUILD_FILE\.tmp":"$_BUILD_FILE":g $_BUILD_FILE.opt.js
-echo -e "\e[1;37mMinifying Module\e[0m"
+echo -e "\e[1;37mMinifying Module > $_BUILD_FILE.opt.min.js\e[0m"
 uglifyjs $_BUILD_FILE.opt.js > $_BUILD_FILE.opt.min.js
-echo -e "\e[1;37mGzipping Module (Not needed for Akamai Deployments) \e[0m"
+echo -e "\e[1;37mGzipping Module > $_BUILD_FILE.opt.min.js.gz (Not needed for Akamai Deployments) \e[0m"
 gzip -c $_BUILD_FILE.opt.min.js > $_BUILD_FILE.opt.min.js.gz
 rm $_BUILD_FILE.tmp.js -f
 echo -e "\e[1;37mDONE\e[0m"
