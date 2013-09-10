@@ -34,12 +34,12 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 		//Batch out the queries
 		var _batches = _.reduce(options.queries, function(_m, value, i, _l){
 				var _b = _.last(_m);
-				if(!_b || _b.length >= batchSize){
-					//create a new batch, else add to current batch
-					_b = [];
-					_m.push(_b);
-				}
 				if(!value.disabled){
+					if(!_b || _b.length >= batchSize){
+						//create a new batch, else add to current batch
+						_b = [];
+						_m.push(_b);
+					}
 					_b.push(value);
 				}
 				return _m;

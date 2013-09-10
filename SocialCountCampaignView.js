@@ -39,8 +39,9 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 	    	this.$container = this.$el.find(this.options.container || ".iga-socialcount-container");
 	    	_.each(this.collection.models, function(model){
 	    		self.renderModel(model);
-	    	});
+	    	});	    	
 	    	//Perform any needed jQuery on $el
+	    	this.trigger("render", this);
 	    	return this;
 	    },
 	    renderModel: function(model){
@@ -139,7 +140,7 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 							//Add new bucket class
 							for(var i in _buckets){
 								bucket = _buckets[i];
-								if(bucket.start <= value && bucket.stop >= value){
+								if(bucket.start <= value && (typeof bucket.stop === "undefined" || bucket.stop+1 > value)){// 0to9 will include 9.xx
 									$item.childrenAndSelf(".bucket-"+attrClass).addClass(attrClass+"-"+bucket.css);
 									break;
 								}

@@ -39,8 +39,8 @@ cd ..
 #Build and rjs optimize module .js
 echo -e "\e[1;37mOptimizing $_BUILD_FILE.js ... \e[0m"
 cp $_BUILD_FILE.js $_BUILD_FILE.tmp.js
-echo -e "\e[1;37m\tSwitching to minified css \e[0m"
-sed -i -r s:"(['\"]css!.*)\.css(['\"])":"\1.min.css\2":g $_BUILD_FILE.tmp.js
+#echo -e "\e[1;37m\tSwitching to minified css \e[0m"
+#sed -i -r s:"(['\"]css!.*)\.css(['\"])":"\1.min.css\2":g $_BUILD_FILE.tmp.js
 echo -e "\e[1;37m\tRunning requirejs optimizer > $_BUILD_FILE.opt.js  \e[0m"
 rjs -o app.build.js name=$_PATH/$_BUILD_FILE.tmp out=$_BUILD_FILE.opt.js
 sed -i -r s:"$_BUILD_FILE\.tmp":"$_BUILD_FILE":g $_BUILD_FILE.opt.js

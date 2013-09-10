@@ -19,29 +19,39 @@ div.iga-socialcount-container > article.university:nth-last-child(-n+6) h3{font-
 div.iga-socialcount-container > article.university:nth-last-child(-n+6) p.percentOfTotal{font-size:16px;}
 
 /*Set images*/
-div.iga-socialcount-container > article.purdue{background-image:url(http://www.ohlays.com/wallpapers/purdueboilermaker.jpg); }
-div.iga-socialcount-container > article.ucla{background-image:url(http://www.ohlays.com/wallpapers/uclabruins.jpg); }
-div.iga-socialcount-container > article.usc{background-image:url(http://www.ohlays.com/wallpapers/usctrojans.jpg); }
-div.iga-socialcount-container > article.harvard{background-image:url(http://www.ohlays.com/wallpapers/harvardcrimson.jpg); }
-div.iga-socialcount-container > article.oregon{background-image:url(http://www.ohlays.com/wallpapers/oregonducks.jpg); }
-div.iga-socialcount-container > article.cal{background-image:url(http://www.ohlays.com/wallpapers/californiagoldenbears.jpg); }
-div.iga-socialcount-container > article.michigan{background-image:url(http://www.ohlays.com/wallpapers/michiganwolverines.jpg); }
-div.iga-socialcount-container > article.duke{background-image:url(http://www.ohlays.com/wallpapers/dukebluedevils.jpg); }
-div.iga-socialcount-container > article.ohio-state{background-image:url(http://www.ohlays.com/wallpapers/ohiostatebuckeyes.jpg); }
-div.iga-socialcount-container > article.florida{background-image:url(http://www.ohlays.com/wallpapers/floridagators.jpg); }
-div.iga-socialcount-container > article.arizona{background-image:url(http://www.ohlays.com/wallpapers/arizonawildcats1.jpg); }
-div.iga-socialcount-container > article.arizona-state{background-image:url(http://www.ohlays.com/wallpapers/arizonastatesundevils.jpg); }
+body.html div.iga-socialcount-container > article.seattle-university{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/seattle.jpg); }
+body.html div.iga-socialcount-container > article.university-of-washington{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/washington.jpg); }
+body.html div.iga-socialcount-container > article.gonzaga-university{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/gonzaga.jpg); }
+body.html div.iga-socialcount-container > article.spokane-community-college{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/spokane.jpg); }
+body.html div.iga-socialcount-container > article.university-of-nevada,-reno{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/nevada.jpg); }
+body.html div.iga-socialcount-container > article.boise-state-university{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/boisestate.jpg); }
+body.html div.iga-socialcount-container > article.university-of-chicago{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/chicago.jpg); }
+body.html div.iga-socialcount-container > article.university-of-louisville{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/louisville.jpg); }
+body.html div.iga-socialcount-container > article.northwestern-university{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/northwestern.jpg); }
+body.html div.iga-socialcount-container > article.san-francisco-state{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/sfstate.jpg); }
+body.html div.iga-socialcount-container > article.uc-berkeley{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/cal.jpg); }
+body.html div.iga-socialcount-container > article.ucla{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/ucla.jpg); }
+body.html div.iga-socialcount-container > article.university-of-southern-california{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/usc.jpg); }
+body.html div.iga-socialcount-container > article.san-diego-state-university{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/sdstate.jpg); }
+body.html div.iga-socialcount-container > article.ucsd{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/ucsd.jpg); }
+body.html div.iga-socialcount-container > article.university-of-colorado,-boulder{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/colorado.jpg); }
+body.html div.iga-socialcount-container > article.university-of-georgia{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/georgia.jpg); }
+body.html div.iga-socialcount-container > article.georgia-state-university{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/georgiastate.jpg); }
+body.html div.iga-socialcount-container > article.university-of-maryland,-college-park{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/maryland.jpg); }
+body.html div.iga-socialcount-container > article.georgetown-university{background-image:url(http://promos.umg.edrupalgardens.com/sites/promos.umg.edrupalgardens.com/files/201309/georgetown.jpg); }
+
 
 /* Bucket sizes */
-div.iga-socialcount-container > article.university.disqualified,
-div.iga-socialcount-container > article.university.percentOfTotal-0to9{ width:150px;}
-div.iga-socialcount-container > article.university.percentOfTotal-10to19{ width:200px;}
-div.iga-socialcount-container > article.university.percentOfTotal-20to29{ width:300px;}
-div.iga-socialcount-container > article.university.percentOfTotal-30to39{ width:350px;}
-div.iga-socialcount-container > article.university.percentOfTotal-40to49{ width:400px;}
-div.iga-socialcount-container > article.university.percentOfTotal-50to59{ width:450px;}
-div.iga-socialcount-container > article.university.percentOfTotal-60to69{ width:4750px;}
-div.iga-socialcount-container > article.university.percentOfTotal-70to79,
-div.iga-socialcount-container > article.university.percentOfTotal-80to89,
-div.iga-socialcount-container > article.university.percentOfTotal-90to99,
-div.iga-socialcount-container > article.university.percentOfTotal-100plus{width:500px;}
+
+body.html div.iga-socialcount-container > article.university.disqualified,
+body.html div.iga-socialcount-container > article.university.percentOfTotal-0to2{ width:150px;}
+body.html div.iga-socialcount-container > article.university.percentOfTotal-3to5{ width:200px;}
+body.html div.iga-socialcount-container > article.university.percentOfTotal-6to8{ width:300px;}
+body.html div.iga-socialcount-container > article.university.percentOfTotal-9to11{ width:350px;}
+body.html div.iga-socialcount-container > article.university.percentOfTotal-12to14{ width:400px;}
+body.html div.iga-socialcount-container > article.university.percentOfTotal-15to17{ width:450px;}
+body.html div.iga-socialcount-container > article.university.percentOfTotal-18to20{ width:475px;}
+body.html div.iga-socialcount-container > article.university.percentOfTotal-21to23,
+body.html div.iga-socialcount-container > article.university.percentOfTotal-23to25,
+body.html div.iga-socialcount-container > article.university.percentOfTotal-27to29,
+body.html div.iga-socialcount-container > article.university.percentOfTotal-30plus/*, body.html div.iga-socialcount-container > article.university.university-of-washington*/{width:500px;}

@@ -1,6 +1,6 @@
 fyre-socialcount
 ================
-Livefyre + Backbone Social Counter Apps using Livefyre [Content Count](https://github.com/Livefyre/livefyre-docs/wiki/Content-Count-API) and [Curate Count](https://github.com/Livefyre/livefyre-docs/wiki/Curation-Count-API-(DRAFT)) APIs ([Heat Index](https://github.com/Livefyre/livefyre-docs/wiki/Heat-Index-API) TBD). 
+Livefyre + Backbone Social Counter Apps using Livefyre [Content Count](https://github.com/Livefyre/livefyre-docs/wiki/Content-Count-API) and [Curate Count](https://github.com/Livefyre/livefyre-docs/wiki/Curation-Count-API-(DRAFT) ) APIs ([Heat Index](https://github.com/Livefyre/livefyre-docs/wiki/Heat-Index-API) TBD). 
 
 
 
