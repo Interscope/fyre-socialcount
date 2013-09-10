@@ -4,7 +4,7 @@
 define(["jquery", "underscore", "IGA.utils", "isotope", 
         "isotope/jquery.isotope-addSortLayoutShow",
         "iga/apps/fyre-socialcount/SocialCountCampaignView", 
-        "css!jquery-plugins/jquery.isotope.css"],
+        "css!iga/apps/fyre-socialcount/css/isotope-view.css"],
 		function($, _, utils, isotope, _aSLS, SocialCountCampaignView){
 	
 	function _sort(sortAttr){ return function( $item ) {
@@ -45,9 +45,9 @@ define(["jquery", "underscore", "IGA.utils", "isotope",
 			this.on("render", function(){
 				this.$container.isotope(options.isotope);
 			});
-			
-			this.collection.on("add",function(model){
-				self.$container.isotope("addSortLayoutShow", self.$items[model.id]);
+		
+			this.on("renderModel", function($item, model){
+				self.$container.isotope("addSortLayoutShow", $item);
 				//self.$container.isotope("addItems", self.$items[model.id]).isotope({sortBy:options.isotope.sortBy});
 				//self.$container.isotope("reLayout");
 			});
@@ -55,11 +55,13 @@ define(["jquery", "underscore", "IGA.utils", "isotope",
 			this.collection.on("remove",function(model){
 				self.$container.isotope("remove", self.$items[model.id]).isotope("reLayout");
 			});
-
-			this.collection.on("change",function(model){
-				self.$container.isotope("reLayout");
-			});
 			
+			this.once("loaded", function(){
+				self.collection.on("change",function(model){
+					self.$container.isotope("reLayout");
+				});
+			});
+						
 		}
 	});
 	

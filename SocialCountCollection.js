@@ -70,7 +70,8 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 					return -model.get("count.total");
 			}
 		},
-		requestCallback: function(request, counts){;
+		_responseCount: 0,
+		requestCallback: function(request, counts, args){;
 			//If the item is new add it with id=siteId_articleId .
 			//	If the item already exists, merge it, and trigger a "change".
 			var model, self = this;
@@ -84,15 +85,21 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 			_.each(counts, function(c){
 				self.add(new model(c), {merge:true});//NOTE: counts from different apis will merge to the same model based on id.
 			});
+			if(args && args.requestCount){
+				this._responseCount++;
+				if( this._responseCount == args.requestCount ){
+					this.trigger("updated");
+					this._responseCount = 0;
+				}
+			}
 		},
 		update: function(){
 			var self = this;
-			this.trigger("update");
+			this.trigger("updating");
 			//Allow multiple request instances for content, curate (timeline), or heat
 			_.each(this.config.requests, function(r){
 				new request(r).get(_.bind(self.requestCallback, self, r));
 			});
-			this.trigger("updated");
 		},
 		/**
 		 * @desc update the collection on a timeout

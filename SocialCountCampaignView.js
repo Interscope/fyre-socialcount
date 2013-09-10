@@ -5,7 +5,7 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
         "iga/apps/fyre-socialcount/SocialCountCollection", 
         "hgn!iga/apps/fyre-socialcount/templates/SocialCountCampaign.tpl",
         "hgn!iga/apps/fyre-socialcount/templates/SocialCountCampaignItem.tpl",
-        /*"hgn!iga/apps/fyre-socialcount/templates/partials.tpl.html"*/
+        "iga/apps/fyre-socialcount/templates/partials.html",
         "css!iga/apps/fyre-socialcount/css/fyre-socialcount.css",],
 		function($, _, utils, Hogan, Backbone, SocialCountCollection, CampaignTemplate, ItemTemplate, PartialTemplates){
 	
@@ -19,17 +19,15 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 		template: function (data) {
             var _template = this._template || CampaignTemplate;
             if(typeof _template == "string"){
-            	_template = Hogan.compile(_template);
+            	_template = Hogan.compile(_template);//for html(.js) templates
         	}
-            //return _template.render(data, PartialTemplates);
             return _template(data, PartialTemplates);
 	    },
 	    itemTemplate: function (data) {
             var _template = this._itemTemplate || ItemTemplate;
             if(typeof _template == "string"){
-            	_template = Hogan.compile(_template);
+            	_template = Hogan.compile(_template);//for html(.js) templates
         	}
-            //return _template.render(data, PartialTemplates);
             return _template(data, PartialTemplates);
         },
 	    render: function() {
@@ -37,25 +35,27 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 	    	var $rendered = this.template(this.collection.serialize());
 	    	this.$el.append($rendered);
 	    	this.$container = this.$el.find(this.options.container || ".iga-socialcount-container");
-	    	_.each(this.collection.models, function(model){
+	    	_.each(this.collection.models, function(model){//render the models already in the collection
 	    		self.renderModel(model);
-	    	});	    	
-	    	//Perform any needed jQuery on $el
-	    	this.trigger("render", this);
+	    	});
+	    	this.trigger("render", this);//the collection is rendered!
 	    	return this;
 	    },
 	    renderModel: function(model){
-	    	var self = this, data = model.attributes;
-	    	_.each(data.percent, function(p, key){
-	    		data.percent[key] = utils.round(p, self.options.decimalPlaces || 2);
+	    	var self = this, attrs = model.attributes;
+	    	_.each(attrs.percent, function(p, key){
+	    		attrs.percent[key] = utils.round(p, self.options.decimalPlaces || 2);
 	    	});
 	    	
-	    	var $item = $(this.itemTemplate(data));
+	    	var $item = $(this.itemTemplate(attrs));//render the item
+	    	$item.data("model", model);
 			self.$items[model.id] = $item;
 			//Append the $item
 	    	self.$container.append($item);
+	    	this.trigger("renderModel", $item, model);//Apply view-specific rendering
 	    	return $item;
 	    },
+	    loaded: false,
 		initialize: function(options){
 			var self = this;
 			this.options = options;
@@ -80,8 +80,11 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 			this.collection = this.collection || new SocialCountCollection([], options);
 			//Render any new models
 			this.collection.on("add", function(model){
-				var $item = self.renderModel(model);
-				$item.data("model", model);
+				self.once("loaded", function(){
+					var $item = self.renderModel(model);
+					//which data attributes do we want to update in the view?
+					_$updateView($item, model, _.pick(model.attributes, "count", "percent","heat"));
+				});
 			});
 			
 			//Remove the $item from the view.
@@ -108,21 +111,17 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 				}
 			}
 			
-			this.collection.on("change:count change:percent change:heat", function(model, value, options){
-				//update the view for the model
-				var $attr, attrPath, attrClass;
-					$item = self.$items[model.id],//find the jQuery element for this model
-					changes = utils.diff(model.changed, model._previousAttributes); //NestedModel needs to diff nested changes
-				if(!$item){return;}
-				for(var _attr in changes ){
-					for(var attr in changes[_attr]){
+			function _$updateView($item, model, attrs, options){
+				var value, $attr, attrPath, attrClass;
+				for(var _attr in attrs ){
+					for(var attr in attrs[_attr]){
 						attrPath =_attr+"."+attr;
 						value = model.get(attrPath);
 						if(_attr === "percent"){
 							attrClass = "percent" + (attr.match(/^Of|Or/)?attr:("Of"+utils.toProperCase(attr)) );
 							//update percent widths & heights
-							$item.childrenAndSelf(".width-"+attrClass).css({width:value+"%"});
-							$item.childrenAndSelf(".height-"+attrClass).css({height:value+"%"});
+							$item.childrenAndSelf(".width-"+attrClass).css({ width:value+"%" });
+							$item.childrenAndSelf(".height-"+attrClass).css({ height:value+"%" });
 						}else if(_attr === "heat"){
 							attrClass = "heat-"+attr;
 						}else{
@@ -151,23 +150,51 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 						_$change($item);
 					}
 				}
-			}, this);
+			}
 			
-			this.collection.counters.on("change", function(counter, value, options){
-				var $attr;
-				for(var attr in counter.changed){
-					value = counter.get(attr);
-					$attr = self.$el.find(".iga-socialcount-"+attr);
-					_$setAttr($attr, value, attr);
-				}
+			this.once("loaded", function(){
+				
+				self.collection.on("change:count change:percent change:heat", function(model, value, options){
+					//update the view for the model
+					var $item = self.$items[model.id],//find the jQuery element for this model
+						changes = utils.diff(model.changed, model._previousAttributes); //NestedModel needs to diff nested changes
+					if(!$item){return;}
+					_$updateView($item, model, changes, options);
+				});
+				
+				self.collection.counters.on("change", function(counter, value, options){
+					var $attr;
+					for(var attr in counter.changed){
+						value = counter.get(attr);
+						$attr = self.$el.find(".iga-socialcount-"+attr);
+						_$setAttr($attr, value, attr);
+						//console.log("counter.change."+attr);
+					}
+				});
+				
+				self.collection.trigger("change");
 			});
 			
 		},
 		start: function(options){
+			var self = this;
 			if(typeof options === "number"){
 				options = {interval:options};
 			}
 			options = options || {};
+			this.$el.addClass("loading");
+			this.collection.once("updated", function(){//once all the items are loaded
+				//console.log("updated");
+				//self.collection.counters.once("change", function(){//and all the totals have updated
+					//@TODO and all the models have updated
+					//setTimeout(function(){
+						//console.log("loaded");
+						self.$el.removeClass("loading").addClass("loaded");
+						self.loaded = true;
+						self.trigger("loaded");
+					//},0);
+				//});
+			});
 			//Update & poll the collection
 			if(options.interval){
 				this.collection.updateEvery(options.interval);

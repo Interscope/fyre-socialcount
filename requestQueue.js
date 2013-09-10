@@ -18,6 +18,7 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 		var options = this.options, self = this;
 		var requestParams = {}, model, batchSize = 1 || options.batchSize, batchRequestLimit = 10, batchRequestTimeout = 1;
 		//@TODO Support Heat Index
+		//@TODO Complete Curate
 		switch(options.api){
 			case "curate":
 				model = CurationCount;
@@ -62,7 +63,8 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 			query64 = base64(query);
 			//Send an api request with the hashed query
 			function _request(model, query64){
-				$.getJSON(_.template(model.API, { network: options.network || "umg.fyre.co" , query: query64} ), requestParams, _.bind(self.handleResponse, self, callback));
+				$.getJSON(_.template(model.API, { network: options.network || "umg.fyre.co" , query: query64} ), requestParams, 
+						_.bind(self.handleResponse, self, {requestCount:_batches.length}, callback));
 			}
 			if(options.shim){
 				model.sampleResponse(_.bind(self.handleResponse, self, callback));
@@ -82,7 +84,7 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 		});
 		callback(_disabled);
 	};
-	requestQueue.prototype.handleResponse = function(callback, response){
+	requestQueue.prototype.handleResponse = function(args, callback, response){
 		var options = this.options, self = this;
 		if(response.code == 200){
 			var data = response.data, _data = [], _query ={};
@@ -119,7 +121,7 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 				});	
 			});
 			//Return batch of data to callback([])
-			callback(_data);
+			callback(_data, args);
 		}
 	};
 	
