@@ -10,6 +10,7 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 		model: BaseCount,
 		counters: new Backbone.Model({total: 0, twitter: 0, facebook: 0, feed: 0, livefyre: 0}),
 		initialize: function(models, options){
+			//@TODO Support insert sorted & sorting w/o isotope
 			this.config = options;
 			//When the total changes, update the individual models' % of total
 			var counters = this.counters;
@@ -48,7 +49,7 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 				
 			//  When a model count  changes
 			this.on("change:count", function(model, options){ 
-				//@TODO percent.OfMaxTotal
+				//@TODO percent.OfMaxTotal - percent of highest in collection
 				for(var attr in model.changed){
 					if(counters[attr]){ //  and we have a collection counter for this attribute
 						//  update the collection with the change in the attribute value.
@@ -71,7 +72,7 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 			}
 		},
 		_responseCount: 0,
-		requestCallback: function(request, counts, args){;
+		requestCallback: function(request, counts, args){
 			//If the item is new add it with id=siteId_articleId .
 			//	If the item already exists, merge it, and trigger a "change".
 			var model, self = this;
@@ -87,7 +88,7 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 			});
 			if(args && args.requestCount){
 				this._responseCount++;
-				if( this._responseCount == args.requestCount ){
+				if( this._responseCount === args.requestCount ){
 					this.trigger("updated");
 					this._responseCount = 0;
 				}
@@ -106,9 +107,9 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 		 * @param interval
 		 */
 		updateEvery: function(interval){
-			interval = interval || 15000; //default interval=15sec
+			var _i = (interval || 15)*1000, self = this; //default interval=15sec
 			this.update();
-			this.updateTimeout = setTimeout(_.bind(this.updateEvery, this, interval), interval);
+			this.updateTimeout = setTimeout(_.bind(this.updateEvery, this, interval), _i);
 		},
 		//@TODO Dynamic back-off polling [5000, 30000]
 		start: function(){ this.update(); },

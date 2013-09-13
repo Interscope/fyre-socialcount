@@ -27,7 +27,7 @@ define(["jquery", "underscore", "IGA.utils", "backbone", "backbone.nestedmodel"]
 					}, this);
 				}
 				
-				attributes.url = window.location;
+				attributes.url = _.reduce(window.location, function(l, val, key){ if(typeof val === "string"){ l[key] = val; } return l;}, {});
 			}
 			
 			//Helper Lambda Expression Functions

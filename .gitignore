@@ -4,3 +4,4 @@ deploy.sh
 *.opt.min.js
 *.opt.min.js.gz
 css/*.min.css
+images/*

@@ -153,11 +153,10 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 			}
 			
 			this.once("loaded", function(){
-				
 				self.collection.on("change:count change:percent change:heat", function(model, value, options){
 					//update the view for the model
 					var $item = self.$items[model.id],//find the jQuery element for this model
-						changes = utils.diff(model.changed, model._previousAttributes); //NestedModel needs to diff nested changes
+						changes = utils.diff(_.pick(model.changed, "count", "percent","heat"), model._previousAttributes); //NestedModel needs to diff nested changes
 					if(!$item){return;}
 					_$updateView($item, model, changes, options);
 				});
@@ -168,11 +167,8 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 						value = counter.get(attr);
 						$attr = self.$el.find(".iga-socialcount-"+attr);
 						_$setAttr($attr, value, attr);
-						//console.log("counter.change."+attr);
 					}
 				});
-				
-				self.collection.trigger("change");
 			});
 			
 		},
@@ -184,16 +180,11 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 			options = options || {};
 			this.$el.addClass("loading");
 			this.collection.once("updated", function(){//once all the items are loaded
-				//console.log("updated");
-				//self.collection.counters.once("change", function(){//and all the totals have updated
-					//@TODO and all the models have updated
-					//setTimeout(function(){
-						//console.log("loaded");
-						self.$el.removeClass("loading").addClass("loaded");
-						self.loaded = true;
-						self.trigger("loaded");
-					//},0);
-				//});
+				setTimeout(function(){// and all the triggers have fired
+					self.$el.removeClass("loading").addClass("loaded");
+					self.loaded = true;
+					self.trigger("loaded");
+				}, 0);
 			});
 			//Update & poll the collection
 			if(options.interval){

@@ -3,8 +3,8 @@
  * @desc 
  * @see https://github.com/Livefyre/livefyre-docs/wiki/Content-Count-API
  */
-define(["jquery", "underscore", "IGA.utils", "backbone", "backbone.nestedmodel", "iga/apps/fyre-socialcount/models/BaseCount"],
-		function($, _, utils, Backbone, NestedModel, BaseCountModel){
+define(["jquery", "underscore", "IGA.utils", "backbone", "iga/apps/fyre-socialcount/models/BaseCount"],
+		function($, _, utils, Backbone, BaseCountModel){
 	
 	var ContentCount = BaseCountModel.extend({});
 	

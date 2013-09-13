@@ -11,7 +11,6 @@ div.iga-socialcount-container .bar .width-percentOfTotal{
 
 div.iga-socialcount-container .bar .width-percentOfTotal a,
 div.iga-socialcount-container .bar .width-percentOfTotal a:visited{ color:#fff; -webkit-transition:color .5s; -moz-transition:color .5s; transition:color .5s; }
-
-div.iga-socialcount-container .bar .width-percentOfTotal a:hover{ color:#3f3f44;}
+div.iga-socialcount-container .bar .width-percentOfTotal a:hover{ color:#3f3f44; }
 
 div.iga-socialcount-container .bar .percentOfTotal{ position:absolute; top:25%; right:0; padding-right:5px; }

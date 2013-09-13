@@ -1,0 +1,20 @@
+{
+  "status": "ok",
+  "code": 200,
+  "data": [
+    {
+      "updated": "2012-08-29T19:54:22",
+      "tags": [
+        "",
+        "ben"
+      ],
+      "url": "http://example.com/",
+      "title": "Example Fyreticker",
+      "initUrl": "/bs3/livefyre.com/303613/MTM0/init",
+      "heat": 0.927485339946,
+      "siteId": 303613,
+      "articleId": "134",
+      "id": 10583468
+    }
+  ]
+}

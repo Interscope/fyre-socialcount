@@ -16,7 +16,7 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 	
 	requestQueue.prototype.get = function(callback){
 		var options = this.options, self = this;
-		var requestParams = {}, model, batchSize = 1 || options.batchSize, batchRequestLimit = 10, batchRequestTimeout = 1;
+		var requestParams = {}, model, batchSize = 1 || options.batchSize, batchRequestLimit = 10, batchRequestTimeout = 1000;
 		//@TODO Support Heat Index
 		//@TODO Complete Curate
 		switch(options.api){
@@ -62,18 +62,18 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 			//Hash the query
 			query64 = base64(query);
 			//Send an api request with the hashed query
-			function _request(model, query64){
+			function _request(model, query64, _t){
 				$.getJSON(_.template(model.API, { network: options.network || "umg.fyre.co" , query: query64} ), requestParams, 
 						_.bind(self.handleResponse, self, {requestCount:_batches.length}, callback));
 			}
 			if(options.shim){
-				model.sampleResponse(_.bind(self.handleResponse, self, callback));
+				model.sampleResponse(_.bind(self.handleResponse, self, {requestCount:_batches.length}, callback));
 			}else{
-				_b = Math.floor((i+1) / batchRequestLimit);
+				_b = Math.floor(i / batchRequestLimit);
 				if(batchRequestLimit && _b > 0 ){//ContentCount API only allows 10 requests per sec
-					setTimeout(_.partial(_request, model, query64), batchRequestTimeout*_b);
+					setTimeout(_.partial(_request, model, query64, _b), batchRequestTimeout*_b);
 				}else{
-					_request(model, query64);
+					_request(model, query64, _b);
 				}
 			}
 		});
@@ -126,6 +126,7 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 	};
 	
 	requestQueue.prototype.mergeData = function(data){
+		 if(this.options.shim){ return _.extend(this._queries[_.keys(this._queries)[0]], data); }
 		 return _.extend(this._queries[data.id], data);
 	};
 	
