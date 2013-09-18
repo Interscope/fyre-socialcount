@@ -15,7 +15,7 @@ define(["jquery", "underscore", "IGA.utils", "backbone", "backbone.nestedmodel"]
 				if(attributes.data.name){
 					attributes.data.Name = attributes.data.name;
 					attributes.data.name = attributes.data.Name.toLowerCase();
-					attributes.data.cssName = attributes.data.name.replace(/[_\s]/g,"-").replace(/[#\.\/\\]/g, '');
+					attributes.data.cssName = attributes.data.name.replace(/[_\s]/g,"-").replace(/[#\.\/\\,&]/g, '');
 				}
 				
 				if(attributes.data.goal){

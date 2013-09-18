@@ -169,6 +169,12 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 						_$setAttr($attr, value, attr);
 					}
 				});
+				
+				if(self.collection.counters.get("total") === 0){
+					self.collection.counters.set("total",1);//force an update of percentOfTotal
+					self.collection.counters.set("total",0);
+				}
+				
 			});
 			
 		},

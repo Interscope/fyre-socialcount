@@ -49,7 +49,7 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 		var _disabled = _.where(options.queries, {disabled:true});
 		
 		//Process the batches
-		var query64, _b;
+		var query64, _b, _args;
 		_.each(_batches, function(batch, i){
 			//Format the queries
 			var query = _.reduce(batch, function(memo, count){
@@ -64,10 +64,10 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 			//Send an api request with the hashed query
 			function _request(model, query64, _t){
 				$.getJSON(_.template(model.API, { network: options.network || "umg.fyre.co" , query: query64} ), requestParams, 
-						_.bind(self.handleResponse, self, {requestCount:_batches.length}, callback));
+						_.bind(self.handleResponse, self, {requestCount:_batches.length, _batch: batch}, callback));
 			}
 			if(options.shim){
-				model.sampleResponse(_.bind(self.handleResponse, self, {requestCount:_batches.length}, callback));
+				model.sampleResponse(_.bind(self.handleResponse, self, {requestCount:_batches.length, _batch: batch}, callback));
 			}else{
 				_b = Math.floor(i / batchRequestLimit);
 				if(batchRequestLimit && _b > 0 ){//ContentCount API only allows 10 requests per sec
@@ -88,11 +88,20 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 		var options = this.options, self = this;
 		if(response.code == 200){
 			var data = response.data, _data = [], _query ={};
+			if(!_.keys(data).length){
+				//if there is no data, use the args.batch.
+				_.each(args._batch, function(q){
+					q.id = q.siteId+"_"+q.articleId;
+					q.count = { total:0 };// and set the count to 0
+				});
+				callback(args._batch, args);
+				return;
+			}
 			_.each(data, function(site, siteId){//each site {articles...}
 				siteId = siteId.replace(/^site_/,"");
 				_.each(site, function(article, articleId){//each article {types...}
 					articleId = articleId.replace(/^article_/,"");
-					var _query = {id: siteId+"_"+articleId ,siteId: siteId, articleId: articleId, count:{}}, _total=0;//create our data type
+					var _query = {id: siteId+"_"+articleId, siteId: siteId, articleId: articleId, count:{}}, _total=0;//create our data type
 					
 					_.each(article, function(value, typeId){//each rule-type [?...]
 						//get the counts for each type.
@@ -117,6 +126,7 @@ define(["jquery", "underscore", "base64", "iga/apps/fyre-socialcount/models/Cura
 					});	
 					if(!_query.count.total){_query.count.total = _total;} //CurationCount doesn't return a total
 					//merge data with options.queries
+					
 					_data.push(self.mergeData(_query));
 				});	
 			});

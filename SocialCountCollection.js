@@ -20,7 +20,7 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 					_count = counters.get(attr);
 					_.each(this.models, function(model){
 						_mv = model.get("count."+attr);
-						if( _count === 0 ){ model.set("percent."+attr, 1 / self.models.length * 100); }//if we don't have any counts, set each percent to 1/# of models
+						if( _count === 0 ){ model.set("percent."+attr, 1 / this.models.length * 100); }//if we don't have any counts, set each percent to 1/# of models
 						else if(_mv){ model.set("percent."+attr, _mv / _count * 100); }
 					}, this);
 				}
