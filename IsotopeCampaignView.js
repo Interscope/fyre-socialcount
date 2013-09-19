@@ -50,19 +50,28 @@ define(["jquery", "underscore", "IGA.utils", "isotope",
 				self.$container.isotope("addSortLayoutShow", $item);
 				//self.$container.isotope("addItems", self.$items[model.id]).isotope({sortBy:options.isotope.sortBy});
 				//self.$container.isotope("reLayout");
+				self.reLayout();
 			});
 			
 			this.collection.on("remove",function(model){
 				self.$container.isotope("remove", self.$items[model.id]).isotope("reLayout");
 			});
 			
+			var _reLayoutTimer;
 			this.once("loaded", function(){
 				self.collection.on("change",function(model){
-					self.$container.isotope("reLayout");
+					self.reLayout();
 				});
 			});
 						
+		},
+		_reLayoutTimer: null,
+		reLayout: function(){
+			var self = this;
+			clearTimeout(this._reLayoutTimer);
+			setTimeout(function(){ self.$container.isotope("reLayout"); }, 50);
 		}
+	
 	});
 	
 	return IsotopeCampaignView;

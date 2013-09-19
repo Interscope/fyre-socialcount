@@ -1,3 +1,4 @@
+body.html div.iga-socialcount-container > article{position:relative;}
 div.iga-socialcount-container .bar{ color: #fff; clear:both;}
 div.iga-socialcount-container .bar:hover{ opacity:.8;}
 div.iga-socialcount-container .bar .width-percentOfTotal{
