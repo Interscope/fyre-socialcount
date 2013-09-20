@@ -62,7 +62,7 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 			
 			//#Process configuration options
 			//Create buckets for each type
-			if(self.options.buckets){
+			if(self.options.buckets){//@todo buckets of size < 1
 				self.options.buckets = _.reduce(self.options.buckets, function(_buckets, bucket, attr){
 					if(typeof bucket !== "array"){
 						var _max = bucket.max || 100, 

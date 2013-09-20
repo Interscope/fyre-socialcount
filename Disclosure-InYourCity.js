@@ -23,6 +23,24 @@ define(["jquery", "underscore", "IGA.utils", "isotope", "isotope/jquery.isotope-
 			
 			IsotopeCampaignView.prototype.initialize.apply(this, [options]);
 			
+			this.once("loaded", function(){
+				if(typeof twttr != "undefined" && typeof twttr.events != "undefined" ){
+					twttr.events.bind('click', function(event) { // Track first interaction click
+						var $tgt = $(event.target);
+						if(!!event && $tgt.is(".iga-socialcount a.hashtag")){
+							_gaq.push(['_trackEvent', 'DisclosureHouseParty', 'twitter.click', $tgt.data("hashtag") ]);
+						}
+				    });
+					twttr.events.bind('tweet', function(event) {
+						var $tgt = $(event.target);
+						if(!!event && $tgt.is(".iga-socialcount a.hashtag")){
+							_gaq.push(['_trackEvent', 'DisclosureHouseParty', 'twitter.tweet', $tgt.data("hashtag")]);
+						}
+				    });					
+					
+				}
+			});
+			
 		}
 	});
 	
