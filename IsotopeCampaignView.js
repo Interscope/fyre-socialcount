@@ -25,17 +25,18 @@ define(["jquery", "underscore", "IGA.utils", "isotope",
 			
 			//isotope the items to sort onchange
 			options.isotope = $.extend(true, {
+				masonry:{ columnWidth:100 },
 				itemSelector: '.iga-socialcount-container > article',
-				getSortData : {
-	                "count.total" : _sort("count.total")
-	            },
-	            sortBy: "count.total",
+	            sortBy: this.collection.options.sortBy,
+	            getSortData:{},
 	            sortAscending: false,
 	            animationOptions: {duration: 600, easing: "linear", queue: false },
 	            animationEngine: $.browser.mozilla || $.browser.msie ? "jquery" : "best-available"
 			}, options.isotope);
 			
-			if(options.isotope.sortOptions){
+			options.isotope.getSortData[this.collection.options.sortBy] = _sort(this.collection.options.sortBy);
+			
+			if(options.isotope.sortOptions){//add sorters for every sort option.
 				_.each(options.isotope.sortOptions.split(","), function(sortBy){
 					sortBy = sortBy.trim();
 					options.isotope.getSortData[sortBy] = _sort(sortBy);

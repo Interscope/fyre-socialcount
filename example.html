@@ -2,19 +2,59 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Disclosure Campaign</title>
-<link rel="stylesheet" type="text/css" href="css/example.css" />
+<title>fyre-socialcount test page</title>
+<!-- <link rel="stylesheet" type="text/css" href="css/example.css" /> -->
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js" ></script>
-<script type="text/javascript" src="/_global/js/require.js" ></script><!-- //cache.umusic.com/web_assets -->
-<script type="text/javascript" src="/_global/js/iga/iga.require.main.js" ></script>
+<script type="text/javascript" src="/js/require.js" ></script><!-- //cache.umusic.com/web_assets -->
+<script type="text/javascript" src="/js/iga/iga.require.main.js" ></script>
+<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
 </head>
 <body class="html">
 	
-	<div id="disclosure-cities"></div>
-	
-	<div id="disclosure-bar"></div>
-	
+	<!-- <div id="disclosure-cities"></div>
+	<div id="disclosure-bar"></div>-->
+	<div id="mmlp2-lyrics-vote"></div>
 	<script type="text/javascript">
+		require.config({paths: {"iga/apps/fyre-socialcount/Lyrics-SocialVote": "iga/apps/fyre-socialcount/Lyrics-SocialVote.opt.min"}});
+		require(["iga/apps/fyre-socialcount/Lyrics-SocialVote"],function(LyricsSocialVote){
+			var _voteText = encodeURIComponent("Vote for your favorite track off #MMLP2 at");
+			var _options = {
+				el: document.getElementById("mmlp2-lyrics-vote"),
+				sortBy: "count.random",
+				isotope: { sortOptions: "order.rank", sortBy:"order.rank", sortAscending:true },
+				requests: {
+					counts:{
+						api: "content",
+						network: "umg.fyre.co",
+						queries:[
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_badguy', data:{ name: "Bad Guy", hashtag: "MMLP2Lyrics,BADGUY"  } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_parkinglot', data:{ name:"Parking Lot (skit)", hashtag: "MMLP2Lyrics,PARKINGLOT" } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_rhymeorreason', data:{ name:"Rhyme or Reason", hashtag: "MMLP2Lyrics,RHYMEORREASON" } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_somuchbetter', data:{ name:"So Much Better", hashtag: "MMLP2Lyrics,SOMUCHBETTER" } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_survival', data:{ name:"Survival", hashtag: "MMLP2Lyrics,SURVIVAL" } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_legacy', data:{ name:"Legacy", hashtag: "MMLP2Lyrics,LEGACY" } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_bezerk', data:{ name:"Bezerk", hashtag: "MMLP2Lyrics,BEZERK" } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_asshole', data:{ name:"Asshole ft. Skylar Grey", hashtag: "MMLP2Lyrics,ASSHOLE" } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_rapgod', data:{ name:"Rap God", hashtag: "MMLP2Lyrics,RAPGOD" } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_brainless', data:{ name:"Brainless", hashtag: "MMLP2Lyrics,BRAINLESS" } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_strongerthaniwas', data:{ name:"Stronger Than I Was", hashtag: "MMLP2Lyrics,STRONGERTHANIWAS" } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_themonster', data:{ name:"The Monster ft. Rihanna", hashtag: "MMLP2Lyrics,THEMONSTER" } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_sofar', data:{ name:"So Far...", hashtag: "MMLP2Lyrics,SOFAR" } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_lovecame', data:{ name:"Love Came ft. Kendrick Lamar", hashtag: "MMLP2Lyrics,LOVECAME" } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_headlights', data:{ name:"Headlights Ft. Nate Ruess", hashtag: "MMLP2Lyrics,HEADLIGHTS" } },
+							{siteId:'336040', articleId: 'mmlp2lyrics_vote_eviltwin', data:{ name:"Evil Twin", hashtag: "MMLP2Lyrics,EVILTWIN" } }
+						]
+					}
+				}
+			};
+			
+			_.each(_options.requests.counts.queries, function(q){
+				q.data.voteText = _voteText;
+			});
+			
+			var lyricsVote = new LyricsSocialVote(_options).render().start({interval:false});
+		});
+	
 		/*
 		require(["iga/apps/fyre-socialcount/requestQueue"/ *],function(request){
 			new request({ api: "content", //shim: true,
@@ -55,7 +95,7 @@
         */
 		
 		//requirejs.config({paths: {"iga/apps/fyre-socialcount/Disclosure-InYourCity": "iga/apps/fyre-socialcount/Disclosure-InYourCity.opt.min"}});
-		require(["iga/apps/fyre-socialcount/Disclosure-InYourCity"],function( Campaign){
+		/*require(["iga/apps/fyre-socialcount/Disclosure-InYourCity"],function( Campaign){
 			var campaign = new Campaign({
 				el: document.getElementById("disclosure-cities"),
 				buckets:{
@@ -112,7 +152,7 @@
 					}
 				}
 			}).render().start(60);
-		});
+		});*/
 		
 	</script>
 </body>

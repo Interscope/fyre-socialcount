@@ -153,10 +153,10 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 			}
 			
 			this.once("loaded", function(){
-				self.collection.on("change:count change:percent change:heat", function(model, value, options){
+				self.collection.on("change:count change:percent change:heat change:order", function(model, value, options){// change:order
 					//update the view for the model
 					var $item = self.$items[model.id],//find the jQuery element for this model
-						changes = utils.diff(_.pick(model.changed, "count", "percent","heat"), model._previousAttributes); //NestedModel needs to diff nested changes
+						changes = utils.diff(_.pick(model.changed, "count", "percent","heat", "order"), model._previousAttributes); //NestedModel needs to diff nested changes
 					if(!$item){return;}
 					_$updateView($item, model, changes, options);
 				});

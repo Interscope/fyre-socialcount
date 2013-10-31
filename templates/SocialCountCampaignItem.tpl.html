@@ -1,8 +1,10 @@
-<article id="{{cssSafeId}}" class="{{data.name}}{{#data.disabled}} disabled{{/data.disabled}}">
+<article id="{{cssSafeId}}" class="{{data.cssName}}{{#data.disabled}} disabled{{/data.disabled}}">
 	<div class="bar">
-		<p class="width-percentOfTotal">
-			<span class="hashtag"><a href="https://twitter.com/intent/tweet?text={{#urlEncode}}{{data.twitterIntentText}}{{/urlEncode}}&hashtags={{data.hashtag}}&related=interscope&url={{#urlEncode}}{{url.href}}{{/urlEncode}}" target="_blank" >#{{data.hashtag}}</a></span>
-			<span class="percentOfTotal">{{percent.otal}}</span>
-		</p>
+		<div class="width-percent width-percentOfTotal">
+			<div class="bar-content">
+				<span class="hashtag"><a href="https://twitter.com/intent/tweet?text={{data.twitterIntentText}}&hashtags={{data.hashtag}}&related=interscope&url={{url.encoded}}" target="_blank" >#{{data.hashtag}}</a></span>
+				<span class="percentOfTotal">{{percent.total}}</span>
+			</div>
+		</div>
 	</div>
 </article>

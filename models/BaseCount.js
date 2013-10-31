@@ -7,7 +7,7 @@ define(["jquery", "underscore", "IGA.utils", "backbone", "backbone.nestedmodel"]
 		function($, _, utils, Backbone, NestedModel){
 	
 	var BaseCount = Backbone.NestedModel.extend({
-		defaults:{},
+		defaults:{ order:{} },
 		initialize: function(attributes, options){
 			var self = this;
 			this.config = options;
@@ -27,10 +27,14 @@ define(["jquery", "underscore", "IGA.utils", "backbone", "backbone.nestedmodel"]
 					}, this);
 				}
 				
-				attributes.url = _.reduce(window.location, function(l, val, key){ if(typeof val === "string"){ l[key] = val; } return l;}, {});
+				attributes.url = { encoded: encodeURIComponent(window.location.href), href: window.location.href };
+				//_.each(window.location, function(val, key, l){ if(typeof l[key] === "string"){ attributes.url[key] = val; }}, {});
 			}
 			
+			attributes.count.random = Math.round(Math.random()*100);
+			
 			//Helper Lambda Expression Functions
+			//##! HOGAN.js doesn't process functions properly when compiled.
 			attributes.urlEncode = function(){
 				return function(text){ return encodeURIComponent(_.template(text, self.attributes)); };
 			};

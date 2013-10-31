@@ -11,7 +11,7 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 		counters: new Backbone.Model({total: 0, twitter: 0, facebook: 0, feed: 0, livefyre: 0}),
 		initialize: function(models, options){
 			//@TODO Support insert sorted & sorting w/o isotope
-			this.config = options;
+			this.options = _.extend( {sortBy:"count.total"}, options);
 			//When the total changes, update the individual models' % of total
 			var counters = this.counters;
 			counters.on("change", function(model, options){
@@ -28,14 +28,13 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 			
 			this.on("add", function(model){
 				//When a model is added to this collection:
-				//@TODO add rank, percentile (count-rank-1)/count
 				//  Add the new model's counts to the Collection's counts
 				setTimeout(function(){
 					_.each(counters.attributes, function(value, type){
 						var _mv = model.get("count."+type);
 						if(_mv){ counters.set(type, value + _mv); }
 					});
-				},0);
+				},0);				
 			}, this);
 			
 			//When a model is removed 
@@ -49,7 +48,6 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 				
 			//  When a model count  changes
 			this.on("change:count", function(model, options){ 
-				//@TODO percent.OfMaxTotal - percent of highest in collection
 				for(var attr in model.changed){
 					if(counters[attr]){ //  and we have a collection counter for this attribute
 						//  update the collection with the change in the attribute value.
@@ -57,6 +55,19 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 					}
 				}
 			}, this);
+			
+			this.on("sort", function(c, o){
+				var _top = this.models[0], _sortBy = this.options.sortBy;
+				
+				_.each(this.models, function(model, i){
+					var _rank = i+1,
+						_percentile = (this.models.length-i-0.5)*100/this.models.length; 
+					model.set("order.rank", _rank);
+					model.set("order.percentile", _percentile);//ordinal-rank percentile
+					model.set("percent.OfTop", model.get(_sortBy) / _top.get(_sortBy) * 100);//percent of the highest in the collection
+				}, this);
+			}, this);
+			
 		},
 		serialize: function(){
 			var data = {};
@@ -65,11 +76,7 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 			return data;
 		},
 		comparator: function(model){ //Used to sort models
-			//@TODO Support different sort attributes, sort order
-			switch(this.sortBy){
-				default:
-					return -model.get("count.total");
-			}
+			return -model.get(this.options.sortBy);
 		},
 		_responseCount: 0,
 		requestCallback: function(request, counts, args){
@@ -98,7 +105,7 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 			var self = this;
 			this.trigger("updating");
 			//Allow multiple request instances for content, curate (timeline), or heat
-			_.each(this.config.requests, function(r){
+			_.each(this.options.requests, function(r){
 				new request(r).get(_.bind(self.requestCallback, self, r));
 			});
 		},

@@ -1,17 +1,19 @@
-body.html div.iga-socialcount-container > article{position:relative;}
+body.html div.iga-socialcount-container > article{position:relative; width:100%;}
 div.iga-socialcount-container .bar{ color: #fff; clear:both;}
 div.iga-socialcount-container .bar:hover{ opacity:.8;}
-div.iga-socialcount-container .bar .width-percentOfTotal{
+div.iga-socialcount-container .bar .width-percent{
 	background-color: #2558FF;
 	display:block;
 	position:relative;
 	margin:1px 0 0 0;
-	padding: .5em 4em .5em .5em;
+	min-width: 5em;
+	padding:0;
 	-webkit-transition:background-color .3s ease-out; -moz-transition:background-color .3s ease-out; transition:background-color .3s ease-out;
 }
+div.iga-socialcount-container .bar .width-percent .bar-content{ padding:.5em; }
 
-div.iga-socialcount-container .bar .width-percentOfTotal a,
-div.iga-socialcount-container .bar .width-percentOfTotal a:visited{ color:#fff; -webkit-transition:color .5s; -moz-transition:color .5s; transition:color .5s; }
-div.iga-socialcount-container .bar .width-percentOfTotal a:hover{ color:#3f3f44; }
-
-div.iga-socialcount-container .bar .percentOfTotal{ position:absolute; top:25%; right:0; padding-right:5px; }
+div.iga-socialcount-container .bar .width-percent a,
+div.iga-socialcount-container .bar .width-percent a:visited{ color:#fff; -webkit-transition:color .5s; -moz-transition:color .5s; transition:color .5s; }
+div.iga-socialcount-container .bar .width-percent a:hover{ color:#3f3f44; }
+div.iga-socialcount-container .bar .percent{ position:absolute; top:25%; right:0; padding-right:5px; }
+div.iga-socialcount-container .bar .vote{ float:right; }

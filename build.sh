@@ -1,5 +1,6 @@
 #!/bin/bash
 #require node, uglifyjs, csso, rjs, gzip
+#usage bash build.sh <VIEW NAME>
 _PATH=$(echo $PWD | sed -e 's/.*js\/\(.*\)/\1/' | xargs echo)
 if [ -z "$1" ]; then
 	echo -e "\e[1;31mA file to build is required.\e[0m"
