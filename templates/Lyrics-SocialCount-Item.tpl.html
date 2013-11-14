@@ -1,14 +1,16 @@
 <article id="{{cssSafeId}}" class="{{data.cssName}}{{#data.disabled}} disabled{{/data.disabled}}">
-	<div class="title">{{data.Name}}</div>
+	<div class="title">{{#data.link}}<a href="{{data.link}}" title="See the lyrics for {{data.Name}}">{{data.Name}}</a>{{/data.link}}{{^data.link}}{{data.Name}}{{/data.link}}</div>
 	<div class="bar">
-		<div class="width-percent width-percentOfTop" data-class="width-percentOfTotal">
+		<div class="width-percent width-percentOfTop" data-class="width-percentOfTop">
 			<div class="bar-content">
-				<span class="rank">{{order.rank}}</span>
-				<span class="total">{{count.total}}</span>
-				<span class="tweet-btn" title="Vote for {{data.Name}} on Twitter"><a href="https://twitter.com/intent/tweet?text={{data.voteText}}{{#data.hashtag}}&hashtags={{data.hashtag}}{{/data.hashtag}}{{#data.related}}&related={{data.related}}{{/data.related}}&url={{url.encoded}}" target="_blank" >
-					<span class="vote">Vote</span>
-				</a></span>
+				<span class="track">{{data.track}}</span>
 			</div>
+		</div>
+		<div class="bar-right">
+			<span class="percentOfTotal">{{percent.total}}</span>
+			<span class="tweet-btn" title="Share the lyrics for {{data.Name}} on Twitter"><a href="https://twitter.com/intent/tweet?text={{data.voteText}}{{#data.hashtag}}&hashtags={{data.hashtag}}{{/data.hashtag}}{{#data.related}}&related={{data.related}}{{/data.related}}&url={{#data.linkEncoded}}{{data.linkEncoded}}{{/data.linkEncoded}}{{^data.linkEncoded}}{{url.encoded}}{{/data.linkEncoded}}" target="_blank" >
+				<span class="vote">Share</span>
+			</a></span>
 		</div>
 	</div>
 </article>
