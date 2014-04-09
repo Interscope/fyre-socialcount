@@ -50,8 +50,26 @@ define(["jquery", "underscore", "IGA.utils", "hogan", "backbone",
 	    	var $item = $(this.itemTemplate(attrs));//render the item
 	    	$item.data("model", model);
 			self.$items[model.id] = $item;
-			//Append the $item
-	    	self.$container.append($item);
+			//Append the $item in sorted order
+			if(_.size(self.$items) == 1 || model == _.last(self.collection.models)){
+				self.$container.append($item);
+			}else{
+				var index = -1, previousModel = null, $previousItem = null, nextModel = null, $nextItem = null;
+				_.find(self.collection.models, function(m){ index++; return m === model; });
+				
+				for(var i=0; (index > 0+i || index+1+i < self.collection.models.length ) &&  !$previousItem && !$nextItem ; i++){
+					previousModel = (index-1-i > 0) ? self.collection.models[index-1-i] : null;
+					$previousItem = (previousModel) ? self.$items[previousModel.id] : null;
+					nextModel = (index+1+i < self.collection.models.length) ? self.collection.models[index+1+i] : null;
+					$nextItem = (nextModel) ? self.$items[nextModel.id] : null;
+				}
+				
+				if($previousItem){
+					$item.insertAfter($previousItem);
+				}else if($nextItem){
+					$item.insertBefore($nextItem);
+				}
+			}
 	    	this.trigger("renderModel", $item, model);//Apply view-specific rendering
 	    	return $item;
 	    },

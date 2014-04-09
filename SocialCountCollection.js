@@ -10,7 +10,6 @@ define(["jquery", "underscore", "backbone", "iga/utils/iga.backbone.custom",
 		model: BaseCount,
 		counters: new Backbone.Model({total: 0, twitter: 0, facebook: 0, feed: 0, livefyre: 0}),
 		initialize: function(models, options){
-			//@TODO Support insert sorted & sorting w/o isotope
 			this.options = _.extend( {sortBy:"count.total"}, options);
 			//When the total changes, update the individual models' % of total
 			var counters = this.counters;
